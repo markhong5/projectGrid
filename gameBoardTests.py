@@ -35,7 +35,7 @@ class TestgameBoard(unittest.TestCase):
 
         aBoard = gameBoard.GameBoard(1, 2)
         aBoard.createBoard([
-            [Item.Item("C", "5coin", 5, "C"), Enemy.Enemy("Spider", 3, 4, 2, "SSSSS")]
+            [Item.Item("C", "5coin", 5, "C", 0), Enemy.Enemy("Spider", 3, 4, 2, "SSSSS")]
         ])
 
         self.assertTrue(isinstance(aBoard.board[0][0], Item.Item))
@@ -44,8 +44,8 @@ class TestgameBoard(unittest.TestCase):
         bBoard = gameBoard.GameBoard(2, 1)
 
         bBoard.createBoard([
-            [Item.Item("C", "5coin", 5, "C")],
-            [Item.Item("P", "10heal", 10, "H")]
+            [Item.Item("C", "5coin", 5, "C", 0)],
+            [Item.Item("P", "10heal", 10, "H", 8)]
         ])
         self.assertTrue(isinstance(bBoard.board[0][0], Item.Item))
         self.assertTrue(isinstance(bBoard.board[1][0], Item.Item))

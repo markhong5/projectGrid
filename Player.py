@@ -1,13 +1,18 @@
 
 import Tile
 import copy
+
+BASE_HP = 10
+BASE_MAXHP = 10
+LEVELXP_INCREASE = 5
+MAXHP_INCREASE = 5
+
 class Player(Tile.Tile):
-    BASE_HP = 10
-    BASE_XP = 0
-    BASE_MONEY = 0
+
 
     def __init__(self):
-        self.hp = 10
+        self.hp = BASE_HP
+        self.maxHP = BASE_MAXHP
         self.xp = 0
         self.coin = 0
         self.toLevelUp = 5
@@ -21,15 +26,14 @@ class Player(Tile.Tile):
         return f"{playerString:<10}"
 
     def print_playerDetails(self):
-        playerDetails = "level: {} hp:{} xp:{} coin:{} equipment:{} "
-        return playerDetails.format(self.level, self.hp, self.xp, self.coin, self.equipment)
+        playerDetails = "level: {} hp:{}/{} xp:{}/{} coin:{} equipment:{} "
+        return playerDetails.format(self.level, self.hp,self.maxHP, self.xp, self.toLevelUp, self.coin, self.equipment)
 
     def loseHP(self, hpLost):
         self.hp -= hpLost
         return self.hp
 
     def defeatMonster(self, monsterStats):
-        #FIXME include levelup when enough xp is received
         if(self.equipment != None):
             self.equipment.bonus -= monsterStats[0]
             if(self.equipment.bonus <= 0):
@@ -39,16 +43,32 @@ class Player(Tile.Tile):
             self.hp -= monsterStats[0]
         self.xp += monsterStats[1]
         self.coin += monsterStats[2]
+        self.levelUp()
 
     def getItem(self, item):
         if item.type == "C":
             self.coin += item.bonus
-        elif item.type == "P":
+        elif item.type == "P" and item.cost <= self.coin:
+            self.coin -= item.cost
             self.hp += item.bonus
-        elif item.type == "W":
+            if(self.hp > self.maxHP):
+                self.hp = self.maxHP
+
+        elif item.type == "W" and item.cost <= self.coin:
+            self.coin -= item.cost
             self.equipment = copy.deepcopy(item)
 
 
     def outOfHP(self):
         return True if self.hp <= 0 else False
+
+    def levelUp(self):
+        while self.xp >= self.toLevelUp:
+            self.maxHP += MAXHP_INCREASE
+            self.hp = self.maxHP
+            self.xp = self.xp - self.toLevelUp
+            self.toLevelUp += LEVELXP_INCREASE
+            self.level += 1
+
+
 

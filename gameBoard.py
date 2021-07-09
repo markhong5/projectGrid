@@ -6,7 +6,7 @@ import random
 
 ENEMY_LIST = [Enemy.Enemy("Spider", 3, 4, 2, "SSSSS"), Enemy.Enemy("Mushroom", 1, 1, 1, "MMMMM"),
               Enemy.Enemy("Tiger", 5, 6, 4, "TTTTT")]
-ITEM_LIST = [Item.Item("C", "5coin", 5, "C"), Item.Item("P", "10heal", 10, "H"), Item.Item("W", "5sword", 5, "W")]
+ITEM_LIST = [Item.Item("C", "5coin", 5, "C", 0), Item.Item("P", "10heal", 10, "H", 8), Item.Item("W", "5sword", 5, "W", 3)]
 class NotValidMoveError(Exception):
     """Must be a valid space for the player to move to"""
     pass
@@ -30,7 +30,7 @@ class GameBoard:
                     spiderEnemy = Enemy.Enemy("Spider", 3, 4, 2, "SSSSS")
                     row.append(spiderEnemy)
                 elif typeBoard == "5coin":
-                    coinItem = Item.Item("C", "5coin", 5, "5c")
+                    coinItem = Item.Item("C", "5coin", 5, "5c", 0)
                     row.append(coinItem)
                 elif typeBoard == "normal":
                     #60% of the time, choose a random monster to place

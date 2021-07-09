@@ -6,8 +6,8 @@ ROW_COUNT = 3
 COLUMN_COUNT = 3
 
 # This sets the WIDTH and HEIGHT of each grid location
-WIDTH = 200
-HEIGHT = 250
+WIDTH = 250
+HEIGHT = 300
 
 # This sets the margin between each cell and on the edges of the screen.
 MARGIN = 10
@@ -31,7 +31,7 @@ SCREEN_TITLE = "League Of Legends Game"
 class ShapeTile(arcade.Shape):
     """ Sprite with hit points """
 
-    def __init__(self, center_x, center_y, type, bonus):
+    def __init__(self, center_x, center_y, type, bonus, *args):
         super().__init__()
 
         # Bonus is the number
@@ -44,16 +44,23 @@ class ShapeTile(arcade.Shape):
             #W = weapon
             #P = heal
         self.type = type
+        self.cost = 0 if not args else args[0]
 
     def draw_tile_number(self):
         """ Draw how many hit points we have """
+        tile_string = "NOTHING"
+        if self.type == "W" or self.type == "P":
+            tile_string = f"{self.type} : {self.bonus} : {self.cost}"
+        else:
+            tile_string = f"{self.type} : {self.bonus}"
 
-        tile_string = f"{self.type} : {self.bonus}"
-        arcade.draw_text(tile_string,
-                         start_x=self.center_x + BONUS_OFFSET_X,
-                         start_y=self.center_y + BONUS_OFFSET_Y,
-                         font_size=45,
-                         color=arcade.color.WHITE)
+        arcade.draw_text(text= tile_string,
+                         start_x=self.center_x + 0, #BONUS_OFFSET_X,
+                         start_y=self.center_y + 0, #BONUS_OFFSET_Y,
+                         font_size= 35,
+                         color=arcade.color.WHITE,
+                         align= "right",
+                         anchor_x="center", anchor_y="center")
 
 class MyGame(arcade.View):
     """
@@ -73,6 +80,7 @@ class MyGame(arcade.View):
 
         arcade.set_background_color(arcade.color.BLACK)
         self.recreate_grid()
+        #DEBUGGING PURPOSES
         print(self.myGameBoard.printBoard())
         print(self.myGameBoard.getPlayer().print_playerDetails())
 
@@ -102,7 +110,7 @@ class MyGame(arcade.View):
                         currentTile = ShapeTile(x, y, "E", self.myGameBoard[row][column].hp)
                     else:
                         currentTile = ShapeTile(x, y, self.myGameBoard[row][column].type,
-                                                self.myGameBoard[row][column].bonus)
+                                                self.myGameBoard[row][column].bonus, self.myGameBoard[row][column].cost)
                     self.tile_list.append(currentTile)
 
                 self.shape_list.append(current_rect)
@@ -128,7 +136,7 @@ class MyGame(arcade.View):
         except gameBoard.NotValidMoveError:
             print("INVALID MOVE")
 
-
+        #DEBUGGING PURPOSES
         print(self.myGameBoard.printBoard())
         print(self.myGameBoard.getPlayer().print_playerDetails())
         if self.myGameBoard.getPlayer().outOfHP() == True:
