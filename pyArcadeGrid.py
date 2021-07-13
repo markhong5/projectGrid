@@ -31,28 +31,33 @@ SCREEN_TITLE = "League Of Legends Game"
 class ShapeTile(arcade.Shape):
     """ Sprite with hit points """
 
-    def __init__(self, center_x, center_y, type, bonus, *args):
+    def __init__(self, center_x, center_y, tile, type):
         super().__init__()
 
         # Bonus is the number
         self.center_x = center_x
         self.center_y = center_y
-        self.bonus = bonus
+        self.tile = tile
+        self.type = type
         #type is weather its a enemy, weapon, coin, or heal
             #E = enemy
             #C = coin
             #W = weapon
             #P = heal
-        self.type = type
-        self.cost = 0 if not args else args[0]
 
     def draw_tile_number(self):
-        """ Draw how many hit points we have """
+        """ Draw important information about the tile"""
         tile_string = "NOTHING"
-        if self.type == "W" or self.type == "P":
-            tile_string = f"{self.type} : {self.bonus} : {self.cost}"
+        if self.type == "I":
+            if self.tile.type == "W" or self.tile.type == "P":
+                tile_string = f"{self.tile.type} : {self.tile.bonus} : {self.tile.cost}"
+            else:
+                tile_string = f"{self.tile.type} : {self.tile.bonus}"
         else:
-            tile_string = f"{self.type} : {self.bonus}"
+            if self.tile.getAbility()[0] == None:
+                tile_string = f"{self.tile.name} : {self.tile.hp}"
+            else:
+                tile_string = f"{self.tile.name} : {self.tile.hp} : {self.tile.ability[1] + 1}"
 
         arcade.draw_text(text= tile_string,
                          start_x=self.center_x + 0, #BONUS_OFFSET_X,
@@ -75,7 +80,8 @@ class MyGame(arcade.View):
 
         self.shape_list = None
         self.tile_list = None
-        self.myGameBoard = gameBoard.GameBoard(3, 3)
+
+        self.myGameBoard = gameBoard.GameBoard(3, 3, "Both")
         self.myGameBoard.makeBoard("normal")
 
         arcade.set_background_color(arcade.color.BLACK)
@@ -105,12 +111,10 @@ class MyGame(arcade.View):
                 current_rect = arcade.create_rectangle_filled(x, y, WIDTH, HEIGHT, color)
                 #If it is not a player tile
                 if color != arcade.color.GREEN:
-                    currentTile = None
-                    if self.myGameBoard.isEnemy(row, column):
-                        currentTile = ShapeTile(x, y, "E", self.myGameBoard[row][column].hp)
+                    if self.myGameBoard.isItem(row, column):
+                        currentTile = ShapeTile(x, y, self.myGameBoard[row][column], "I")
                     else:
-                        currentTile = ShapeTile(x, y, self.myGameBoard[row][column].type,
-                                                self.myGameBoard[row][column].bonus, self.myGameBoard[row][column].cost)
+                        currentTile = ShapeTile(x, y, self.myGameBoard[row][column], "E")
                     self.tile_list.append(currentTile)
 
                 self.shape_list.append(current_rect)
@@ -133,8 +137,8 @@ class MyGame(arcade.View):
         try:
             self.myGameBoard.makeMove(movement)
             self.recreate_grid()
-        except gameBoard.NotValidMoveError:
-            print("INVALID MOVE")
+        except gameBoard.NotValidMoveError as e:
+            print(e.message)
 
         #DEBUGGING PURPOSES
         print(self.myGameBoard.printBoard())

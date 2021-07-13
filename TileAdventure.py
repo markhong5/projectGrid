@@ -9,8 +9,8 @@ MOVE_DICT = {
 }
 
 if __name__ == "__main__":
-    myGameBoard = gameBoard.GameBoard(3, 3)
-    myGameBoard.makeBoard("normal")
+    myGameBoard = gameBoard.GameBoard(3, 3, "Both")
+    myGameBoard.makeBoard()
     print(myGameBoard.printBoard())
     print(myGameBoard.getPlayer().print_playerDetails())
 
