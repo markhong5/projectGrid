@@ -4,7 +4,8 @@ import Tile
 
 class Enemy(Tile.Tile):
 
-    def __init__(self, name, hp, xp_given, coin_given, tile_description, ability=[None, None]):
+    def __init__(self, name, hp, xp_given, coin_given, tile_description, ability=[None, None],
+                 image="GameImages/four04.png"):
         self.name = name
         self.hp = hp
         self.xp_given = xp_given
@@ -12,6 +13,7 @@ class Enemy(Tile.Tile):
         self.tile_description = tile_description
         self.color = "RED"
         self.ability = ability
+        self.image = image
 
     def print_tile(self):
         enemyTile = str(self.hp) + "-" + self.tile_description

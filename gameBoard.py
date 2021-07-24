@@ -11,10 +11,13 @@ movement ability: enemy moves to different blocks
 explosion ability: enemy blows up cardinal directional tiles and deals damage
 burn/posion ability: enemy deals damage over time
 """
-ENEMY_LIST = [Enemy.Enemy("Spider", 3, 4, 2, "SSSSS"), Enemy.Enemy("Mushroom", 1, 1, 1, "MMMMM"),
-              Enemy.Enemy("Tiger", 5, 6, 4, "TTTTT") ]
-SPECIAL_ENEMIES = [Enemy.Enemy("Bomb", 2, 2, 2, "BBBBB", ["Explode", 3])]
-ITEM_LIST = [Item.Item("C", "5coin", 5, "C", 0), Item.Item("P", "10heal", 10, "H", 8), Item.Item("W", "5sword", 5, "W", 3)]
+ENEMY_LIST = [Enemy.Enemy("Spider", 3, 4, 2, "SSSSS",image="GameImages/Elise_Spiderling_Render.png" ),
+              Enemy.Enemy("Minion", 1, 1, 1, "MMMMM",image="GameImages/Chaos_Minion_Melee_Render.png"),
+              Enemy.Enemy("Tiger", 5, 6, 4, "TTTTT",image="GameImages/tigerUdyr.jpg")]
+SPECIAL_ENEMIES = [Enemy.Enemy("Bomb", 2, 2, 2, "BBBBB", ["Explode", 3], "GameImages/shroom.png")]
+ITEM_LIST = [Item.Item("C", "5coin", 5, "C", 0, image="GameImages/Coin_icon.png"),
+             Item.Item("P", "10heal", 10, "H", 8, image="GameImages/potion.jpg"),
+             Item.Item("W", "5sword", 5, "W", 3, image="GameImages/longSword.png")]
 class NotValidMoveError(Exception):
     """Must be a valid space for the player to move to"""
     def __init__(self, message):
