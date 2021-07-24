@@ -185,9 +185,6 @@ class GameBoard:
 
         self.board[y][x] = self.getNewTile()
 
-
-
-
     def isEnemy(self, x, y):
         return True if isinstance(self.board[x][y], Enemy.Enemy) else False
 

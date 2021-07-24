@@ -67,6 +67,14 @@ class ShapeTile(arcade.Shape):
                          align= "right",
                          anchor_x="center", anchor_y="center")
 
+class MainPlayer(arcade.Sprite):
+    def __init__(self, scale=1):
+        # self.player = player
+        self.image = "GameImages/Alistar_Splash_Tile_0.jpg"
+        super().__init__(self.image, scale, hit_box_algorithm="None")
+
+
+
 class MyGame(arcade.View):
     """
     Main application class.
@@ -80,6 +88,8 @@ class MyGame(arcade.View):
 
         self.shape_list = None
         self.tile_list = None
+        self.player = None
+
 
         self.myGameBoard = gameBoard.GameBoard(3, 3, "Both")
         self.myGameBoard.makeBoard("normal")
@@ -93,6 +103,7 @@ class MyGame(arcade.View):
     def recreate_grid(self):
         self.shape_list = arcade.ShapeElementList()
         self.tile_list = arcade.ShapeElementList()
+        self.player = arcade.SpriteList()
         for row in range(ROW_COUNT):
             for column in range(COLUMN_COUNT):
                 if self.myGameBoard[row][column].color == "GREEN":
@@ -108,16 +119,24 @@ class MyGame(arcade.View):
                 #(ROW_COUNT - row - 1) is for proper pixel alignment
                 y = (MARGIN + HEIGHT) * (ROW_COUNT - row - 1) + MARGIN + HEIGHT // 2
 
-                current_rect = arcade.create_rectangle_filled(x, y, WIDTH, HEIGHT, color)
+                # current_rect = arcade.create_rectangle_filled(x, y, WIDTH, HEIGHT, color)
                 #If it is not a player tile
                 if color != arcade.color.GREEN:
+                    current_rect = arcade.create_rectangle_filled(x, y, WIDTH, HEIGHT, color)
                     if self.myGameBoard.isItem(row, column):
                         currentTile = ShapeTile(x, y, self.myGameBoard[row][column], "I")
                     else:
                         currentTile = ShapeTile(x, y, self.myGameBoard[row][column], "E")
                     self.tile_list.append(currentTile)
+                    self.shape_list.append(current_rect)
+                else:
+                    playerOne = MainPlayer()
+                    playerOne.position = x, y
+                    playerOne.width = WIDTH
+                    playerOne.height = HEIGHT
+                    self.player.append(playerOne)
 
-                self.shape_list.append(current_rect)
+                # self.shape_list.append(current_rect)
 
     def on_draw(self):
         """
@@ -131,6 +150,7 @@ class MyGame(arcade.View):
         for tile in self.tile_list:
             tile.draw_tile_number()
         #Have information text at the top of the screen
+        self.player.draw()
         arcade.draw_text(self.myGameBoard.getPlayer().print_playerDetails(), 10, SCREEN_HEIGHT - UIHEIGHT - 5, arcade.color.WHITE, 20)
 
     def move(self, movement):
